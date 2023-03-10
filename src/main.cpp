@@ -2,6 +2,10 @@
 #include "IglUtils.hpp"
 #include "Config.hpp"
 #include "Optimizer.hpp"
+#include "ADMMTimeStepper.hpp"
+#include "ADMMDDTimeStepper.hpp"
+#include "LBFGSTimeStepper.hpp"
+#include "DOTTimeStepper.hpp"
 #include "NeoHookeanEnergy.hpp"
 #include "FixedCoRotEnergy.hpp"
 #include "GIF.hpp"
@@ -1394,7 +1398,45 @@ int main(int argc, char* argv[])
     //        energyTerms.back()->checkGradient(*triSoup[0]);
     //        energyTerms.back()->checkHessian(*triSoup[0], true);
 
+    //TODO: Set Optimizer
+    /*
+    switch (config.timeStepperType){
+        case IPC::TST_NEWTON:
+            optimizer = new IPC::Optimizer<DIM>(*triSoup[0], energyTerms, energyParams, false, Eigen::MatrixXd(), Eigen::MatrixXi(), Eigen::VectorXi(), config);
+            break;
+            
+        case IPC::TST_ADMM:
+            optimizer = new IPC::ADMMTimeStepper<DIM>(*triSoup[0], energyTerms, energyParams, false, config);
+            break;
+            
+        case IPC::TST_ADMMDD:
+            optimizer = new IPC::ADMMDDTimeStepper<DIM>(*triSoup[0], energyTerms, energyParams, false, config);
+            break;
+            
+        case IPC::TST_LBFGS:
+            optimizer = new IPC::LBFGSTimeStepper<DIM>(*triSoup[0], energyTerms, energyParams, IPC::D0T_PD, false, config);
+            break;
+            
+        case IPC::TST_LBFGSH:
+            optimizer = new IPC::LBFGSTimeStepper<DIM>(*triSoup[0], energyTerms, energyParams, IPC::D0T_H, false, config);
+            break;
+            
+        case IPC::TST_LBFGSHI:
+            optimizer = new IPC::LBFGSTimeStepper<DIM>(*triSoup[0], energyTerms, energyParams, IPC::D0T_HI, false, config);
+            break;
+            
+        case IPC::TST_LBFGSJH:
+            optimizer = new IPC::LBFGSTimeStepper<DIM>(*triSoup[0], energyTerms, energyParams, IPC::D0T_JH, false, config);
+            break;
+            
+        case IPC::TST_DOT:
+        case IPC::TST_LBFGS_GSDD:
+            optimizer = new IPC::DOTTimeStepper<DIM>(*triSoup[0], energyTerms, energyParams, false, config);
+            break;
+    }
+    */
     optimizer = new IPC::Optimizer<DIM>(*triSoup[0], energyTerms, energyParams, false, Eigen::MatrixXd(), Eigen::MatrixXi(), Eigen::VectorXi(), config);
+    
     optimizer->setTime(config.duration, config.dt);
 
     optimizer->precompute();

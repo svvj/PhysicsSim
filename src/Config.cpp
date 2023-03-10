@@ -29,6 +29,12 @@ const std::vector<std::string> Config::timeIntegrationTypeStrs = {
 const std::vector<std::string> Config::constraintSolverTypeStrs = {
     "QP", "SQP", "interiorPoint"
 };
+const std::vector<std::string> Config::timeStepperTypeStrs = {
+        "Newton", "ADMM", "ADMMDD",
+        "LBFGS", "LBFGSH", "LBFGSHI", "LBFGSJH",
+        "DOT",
+        "GSDD"
+};
 const std::vector<std::string> Config::constraintTypeStrs = {
     "volume", "graphics", "nonsmoothNewmark", "gapFunction", "CMR", "Verschoor", "STIV"
 };
@@ -740,6 +746,21 @@ CollisionConstraintType Config::getConstraintTypeByStr(const std::string& str)
     }
     spdlog::warn("Uknown collision constraint type: {:s}; using default collision constraint type: volume", str);
     return CollisionConstraintType::VOLUME;
+}
+TimeStepperType Config::getTimeStepperTypeByStr(const std::string& str)
+{
+    for(int i = 0; i < timeStepperTypeStrs.size(); i++) {
+        if(str == timeStepperTypeStrs[i]) {
+            return TimeStepperType(i);
+        }
+    }
+    std::cout << "use default time stepper type: Newton" << std::endl;
+    return TST_NEWTON;`
+}
+std::string Config::getStrByTimeStepperType(TimeStepperType timeStepperType)
+{
+    assert(timeStepperType < timeStepperTypeStrs.size());
+    return timeStepperTypeStrs[timeStepperType];
 }
 QPSolverType Config::getQPSolverTypeByStr(const std::string& str)
 {
